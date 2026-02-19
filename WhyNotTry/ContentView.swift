@@ -12,26 +12,36 @@ struct ContentView: View {
     var colors = [Color.red, .blue, .purple, .orange, .yellow, .green, .cyan, .mint]
     
     @State var selected = "Baseball"
+    @State var color = Color.blue
+    @State private var id = 1
     
     var body: some View {
         VStack {
             Text("Why not try...")
                 .font(.largeTitle.bold())
             Circle()
-                .fill(colors.randomElement() ?? Color.blue)
+                .fill(color)
                 .padding()
                 .overlay(
                     Image(systemName: "figure.\(selected.lowercased())")
                         .font(.system(size: 144))
                         .foregroundColor(.white)
                 )
+                .transition(.slide)
+                .id(id)
             Text("\(selected)!")
                 .font(.title)
+            Spacer()
             Button("Try again") {
-                selected = activities.randomElement() ?? "Archery"
+                withAnimation(.easeInOut(duration: 1)) {
+                    selected = activities.randomElement() ?? "Archery"
+                    color = colors.randomElement() ?? Color.blue
+                    id += 1
+                }
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 12))
+            .tint(color)
         }
         .padding()
     }
